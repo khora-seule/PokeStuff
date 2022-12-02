@@ -10,8 +10,8 @@ def getTypeNames( typeChart ):
     return list( typeChart.keys() )
 
 def getTypeNum( typeChart ):
-    return len( getTypeNames( typeChart ) )
 
+    return len( getTypeNames( typeChart ) )
 
 def convertOffDef( typeChart ):
 
@@ -19,7 +19,6 @@ def convertOffDef( typeChart ):
     numOfTypes = getTypeNum( typeChart )
 
     return dict( zip( types, [ [ typeChart[ indType1 ][ i ] for indType1 in types ] for i in range( numOfTypes ) ] ) )    
-
 
 def typeCheck( typing, typeChart ):
 
@@ -41,7 +40,7 @@ def calcWeaknesses( type1, type2, typeChart ):
 
     typing = calcTyping( type1, type2, typeChart )
 
-    return [ index for index in range( numOfTypes ) if typing[ index ] < 1.0 ]
+    return [ index for index in range( numOfTypes ) if 0.0 < typing[ index ] < 1.0 ]
 
 def calcStrengths( type1, type2, typeChart ):
 
@@ -51,9 +50,47 @@ def calcStrengths( type1, type2, typeChart ):
 
     return [ index for index in range( numOfTypes ) if typing[ index ] > 1.0 ]
 
+def calcImmunities( type1, type2, typeChart ):
+
+    numOfTypes = getTypeNum( typeChart )
+
+    typing = calcTyping( type1, type2, typeChart )
+
+    return [ index for index in range( numOfTypes ) if typing[ index ] == 0.0 ]
+
+def offensiveCalculations(  type1, type2, typeChart ):
+
+    strengths = ( calcStrengths( type1, 'none', typeChart ), calcStrengths( type2, 'none', typeChart ) )
+
+    weaknesses = ( calcWeaknesses(  type1, 'none', typeChart ), calcWeaknesses(  type2, 'none', typeChart ) )
+
+    immunities = ( calcImmunities( type1, 'none', typeChart ), calcImmunities( type2, 'none', typeChart ) )
+
+    return { "strength" : strengths, "weakness" : weaknesses, "immunity" : immunities }
+
+
+def defensiveCalculations(  type1, type2, typeChart ):
+
+    strengths = calcStrengths( type1, type2, typeChart )
+
+    weaknesses = calcWeaknesses(  type1, type2, typeChart )
+
+    immunities = calcImmunities( type1, type2, typeChart )
+
+    return { "strength" : strengths, "weakness" : weaknesses, "immunity" : immunities }
+
+def displayOffensiveCalcuations( type1, type2, typeChart ):
+
+    calculations = offensiveCalculations( type1, type2, typeChart )
+
+    for calc in calculations:
+        print( "| Offensive Strengths |")
+
+        #print( " calculations[ "strength" ][ 0 ] 
+
+    
 
 def main():
-
 
     offTypeChart = importTypeChart( "./typeChart.txt" )
 
@@ -63,7 +100,7 @@ def main():
     
     assert all( typeCheck( indType, offTypeChart ) for indType in userTypes )
 
-    print( "Offensive Strengths:", getTypes( calcStrengths( userTypes[ 0 ], userTypes[ 1 ], offTypeChart ), getTypeNames( offTypeChart ) ) )
+    print( "Offensive Type 1:", getTypes( calcStrengths( userTypes[ 0 ], userTypes[ 1 ], offTypeChart ), getTypeNames( offTypeChart ) ) )
     print( "Offensive Weaknesses:", getTypes( calcWeaknesses( userTypes[ 0 ], userTypes[ 1 ], offTypeChart ), getTypeNames( offTypeChart ) ) )
 
     print( "Defensive Strengths:", getTypes( calcWeaknesses( userTypes[ 0 ], userTypes[ 1 ], defTypeChart ), getTypeNames( defTypeChart ) ) )

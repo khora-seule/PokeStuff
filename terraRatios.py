@@ -81,14 +81,41 @@ def defensiveCalculations(  type1, type2, typeChart ):
 
 def displayOffensiveCalcuations( type1, type2, typeChart ):
 
+    types = getTypeNames( typeChart )
+
     calculations = offensiveCalculations( type1, type2, typeChart )
 
-    for calc in calculations:
-        print( "| Offensive Strengths |")
+    kinds = [ "strength", "weakness", "immunity" ]
 
-        #print( " calculations[ "strength" ][ 0 ] 
+    print( "|| Offensive Calculations ||\n" )
 
-    
+    for kind in kinds:
+        print( "|", kind.capitalize(), "|" )
+
+        print( "1st Type", kind.capitalize() + ":",  getTypes( calculations[ kind ][ 0 ], types ) )
+        if( type2.lower() != 'none' ):
+            print( "2nd Type", kind.capitalize() + ":",  getTypes( calculations[ kind ][ 1 ], types ) )
+            print( "Dual-Type", kind.capitalize() + ":",  getTypes( calculations[ kind ][ 0 ] + calculations[ kind ][ 1 ], types ) )
+        print()
+
+def displayDefensiveCalcuations( type1, type2, typeChart ):
+
+    types = getTypeNames( typeChart )
+
+    calculations = defensiveCalculations( type1, type2, typeChart )
+
+    kinds = [ "strength", "weakness", "immunity" ]
+
+    print( "|| Defensive Calculations ||\n" )
+
+    for kind in kinds:
+        print( "|", kind.capitalize(), "|" )
+
+        if( type1 != "none" or type2 != "none" ):
+            print( "Mono-Type", kind.capitalize() + ":",  getTypes( calculations[ kind ], types ) )
+        else:
+            print( "Dual-Type", kind.capitalize() + ":",  getTypes( calculations[ kind ], types ) )
+        print()
 
 def main():
 
@@ -97,14 +124,20 @@ def main():
     defTypeChart = convertOffDef( offTypeChart )
 
     userTypes = [ indType.lower() for indType in ( input( "1st Type: " ), input( "2nd Type: " ), input( "Terra Type: " ) ) ]
+
+    print()
     
     assert all( typeCheck( indType, offTypeChart ) for indType in userTypes )
 
-    print( "Offensive Type 1:", getTypes( calcStrengths( userTypes[ 0 ], userTypes[ 1 ], offTypeChart ), getTypeNames( offTypeChart ) ) )
-    print( "Offensive Weaknesses:", getTypes( calcWeaknesses( userTypes[ 0 ], userTypes[ 1 ], offTypeChart ), getTypeNames( offTypeChart ) ) )
+    #print( "Offensive Type 1:", getTypes( calcStrengths( userTypes[ 0 ], userTypes[ 1 ], offTypeChart ), getTypeNames( offTypeChart ) ) )
+    #print( "Offensive Weaknesses:", getTypes( calcWeaknesses( userTypes[ 0 ], userTypes[ 1 ], offTypeChart ), getTypeNames( offTypeChart ) ) )
 
-    print( "Defensive Strengths:", getTypes( calcWeaknesses( userTypes[ 0 ], userTypes[ 1 ], defTypeChart ), getTypeNames( defTypeChart ) ) )
-    print( "Defensive Weaknesses:", getTypes( calcStrengths( userTypes[ 0 ], userTypes[ 1 ], defTypeChart ), getTypeNames( defTypeChart ) ) )
+    #print( "Defensive Strengths:", getTypes( calcWeaknesses( userTypes[ 0 ], userTypes[ 1 ], defTypeChart ), getTypeNames( defTypeChart ) ) )
+    #print( "Defensive Weaknesses:", getTypes( calcStrengths( userTypes[ 0 ], userTypes[ 1 ], defTypeChart ), getTypeNames( defTypeChart ) ) )
+
+    displayOffensiveCalcuations( userTypes[ 0 ], userTypes[ 1 ], offTypeChart )
+    displayDefensiveCalcuations( userTypes[ 0 ], userTypes[ 1 ], defTypeChart )
+
 
 
 main()

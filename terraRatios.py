@@ -77,7 +77,7 @@ def defensiveCalculations(  type1, type2, typeChart ):
 
     immunities = calcImmunities( type1, type2, typeChart )
 
-    return { "strength" : strengths, "weakness" : weaknesses, "immunity" : immunities }
+    return { "immunity" : immunities, "resistant" : weaknesses, "weakness" : strengths }
 
 def displayOffensiveCalcuations( type1, type2, typeChart ):
 
@@ -85,7 +85,7 @@ def displayOffensiveCalcuations( type1, type2, typeChart ):
 
     calculations = offensiveCalculations( type1, type2, typeChart )
 
-    kinds = [ "strength", "weakness", "immunity" ]
+    kinds = calculations.keys()
 
     print( "|| Offensive Calculations ||\n" )
 
@@ -93,7 +93,7 @@ def displayOffensiveCalcuations( type1, type2, typeChart ):
         print( "|", kind.capitalize(), "|" )
 
         print( "1st Type", kind.capitalize() + ":",  getTypes( calculations[ kind ][ 0 ], types ) )
-        if( type2.lower() != 'none' ):
+        if( type2 != 'none' ):
             print( "2nd Type", kind.capitalize() + ":",  getTypes( calculations[ kind ][ 1 ], types ) )
             print( "Dual-Type", kind.capitalize() + ":",  getTypes( calculations[ kind ][ 0 ] + calculations[ kind ][ 1 ], types ) )
         print()
@@ -104,14 +104,14 @@ def displayDefensiveCalcuations( type1, type2, typeChart ):
 
     calculations = defensiveCalculations( type1, type2, typeChart )
 
-    kinds = [ "strength", "weakness", "immunity" ]
+    kinds = calculations.keys()
 
     print( "|| Defensive Calculations ||\n" )
 
     for kind in kinds:
         print( "|", kind.capitalize(), "|" )
 
-        if( type1 != "none" or type2 != "none" ):
+        if( type1 == "none" or type2 == "none" ):
             print( "Mono-Type", kind.capitalize() + ":",  getTypes( calculations[ kind ], types ) )
         else:
             print( "Dual-Type", kind.capitalize() + ":",  getTypes( calculations[ kind ], types ) )
